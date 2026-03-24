@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas, database
 from .database import engine,get_db
 from app.routers import categories,authors,users,books,transaction
+from app.models import Base
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Kütüphane Sistemi API")
