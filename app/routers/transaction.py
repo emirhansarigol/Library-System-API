@@ -42,6 +42,8 @@ def book_return(transaction: schemas.TransactionCreateDTO, db: Session = Depends
     return new_transaction
 
 @router.get("/", response_model=list[schemas.TransactionResponseDTO])
-def get_transactions(db: Session = Depends(get_db)):
-    query_transaction =db.query(models.Transaction).all()
-    return query_transaction
+def get_transactions(book_name:str=None,db: Session = Depends(get_db)):
+    query_transaction = db.query(models.Transaction)
+    if book_name:
+        query_transaction = query_transaction.join(models.Book).filter(models.Book.name == book_name)
+    return query_transaction.all()
