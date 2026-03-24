@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 from .schcategory import CategoryResponse
 from .schauthor import AuthorResponse
@@ -10,8 +11,8 @@ class BookCreate(BaseModel):
 class BookResponse(BaseModel):
     id: int
     name: str
-    category: CategoryResponse
-    author: AuthorResponse
+    category: Optional[CategoryResponse] = None
+    author: Optional[AuthorResponse] = None
     is_active: bool
     class Config:
         orm_mode = True
