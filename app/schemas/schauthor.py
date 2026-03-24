@@ -1,8 +1,13 @@
 from pydantic import BaseModel
 
-class AuthorBase(BaseModel):
+class AuthorCreateDTO(BaseModel):
     name: str
-class AuthorResponse(AuthorBase):
+class AuthorUpdateDTO(BaseModel):
+    name: str
+
+class AuthorResponseDTO(BaseModel):
     id: int
+    name: str
     class Config:
         orm_mode = True
+

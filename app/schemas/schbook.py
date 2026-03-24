@@ -1,21 +1,22 @@
 from typing import Optional
 from pydantic import BaseModel
-from .schcategory import CategoryResponse
-from .schauthor import AuthorResponse
-class BookCreate(BaseModel):
+from .schcategory import CategoryResponseDTO
+from .schauthor import AuthorResponseDTO
+class BookCreateDTO(BaseModel):
     name: str
     category_id: int
     author_id: int
     is_active: bool
 
-class BookResponse(BaseModel):
+class BookResponseDTO(BaseModel):
     id: int
     name: str
-    category: Optional[CategoryResponse] = None
-    author: Optional[AuthorResponse] = None
+    category: Optional[CategoryResponseDTO] = None
+    author: Optional[AuthorResponseDTO] = None
     is_active: bool
     class Config:
-        orm_mode = True
-class BookUpdate(BaseModel):
+        from_attributes = True
+class BookUpdateDTO(BaseModel):
     name: str=None
     author_id: int=None
+    category_id: int=None

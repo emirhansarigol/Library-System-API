@@ -1,10 +1,11 @@
 from pydantic import BaseModel
 
-class UserBase(BaseModel):
+class UserCreateDTO(BaseModel):
     name: str
-class UserResponse(UserBase):
+class UserResponseDTO(BaseModel):
     id: int
+    name: str
     class Config:
         orm_mode = True
-class UserUpdate(BaseModel):
+class UserUpdateDTO(BaseModel):
     name: str

@@ -1,5 +1,5 @@
-from .schcategory import CategoryBase, CategoryResponse
-from .schbook import BookCreate, BookResponse, BookUpdate
-from .schauthor import AuthorBase, AuthorResponse
-from .schuser import UserBase, UserResponse, UserUpdate
-from .schtransaction import TransactionCreate, TransactionResponse
+from .schcategory import CategoryResponseDTO, CategoryCreateDTO,CategoryUpdateDTO
+from .schbook import BookCreateDTO, BookResponseDTO, BookUpdateDTO
+from .schauthor import AuthorCreateDTO, AuthorResponseDTO, AuthorUpdateDTO
+from .schuser import UserCreateDTO, UserResponseDTO, UserUpdateDTO
+from .schtransaction import TransactionCreateDTO, TransactionResponseDTO

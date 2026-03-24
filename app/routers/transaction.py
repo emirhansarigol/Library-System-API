@@ -8,8 +8,8 @@ router = APIRouter(
     prefix="/transaction",
     tags=["transaction"],
 )
-@router.post("/", response_model=schemas.TransactionResponse)
-def book_borrow(transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schemas.TransactionResponseDTO)
+def book_borrow(transaction: schemas.TransactionCreateDTO, db: Session = Depends(get_db)):
     book = db.query(models.Book).filter(models.Book.id == transaction.book_id).first()
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="kitap bulunamadı")
@@ -24,8 +24,8 @@ def book_borrow(transaction: schemas.TransactionCreate, db: Session = Depends(ge
     db.commit()
     db.refresh(new_transaction)
     return new_transaction
-@router.post("/return/",response_model=schemas.TransactionResponse)
-def book_return(transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
+@router.post("/return/",response_model=schemas.TransactionResponseDTO)
+def book_return(transaction: schemas.TransactionCreateDTO, db: Session = Depends(get_db)):
     book = db.query(models.Book).filter(models.Book.id == transaction.book_id).first()
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="kitap bulunamadı")
@@ -40,3 +40,8 @@ def book_return(transaction: schemas.TransactionCreate, db: Session = Depends(ge
     db.commit()
     db.refresh(new_transaction)
     return new_transaction
+
+@router.get("/", response_model=list[schemas.TransactionResponseDTO])
+def get_transactions(db: Session = Depends(get_db)):
+    query_transaction =db.query(models.Transaction).all()
+    return query_transaction

@@ -7,22 +7,22 @@ router = APIRouter(
     prefix="/users",
     tags=["users"],
 )
-@router.post("/", response_model=schemas.UserResponse)
-def create_user(user: schemas.UserBase,db: Session = Depends(get_db)):
+@router.post("/", response_model=schemas.UserResponseDTO)
+def create_user(user: schemas.UserCreateDTO,db: Session = Depends(get_db)):
     new_user = models.User(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
-@router.get("/users/", response_model=list[schemas.UserResponse])
+@router.get("/users/", response_model=list[schemas.UserResponseDTO])
 def get_users(user_name:str=None,db: Session = Depends(get_db)):
     query=db.query(models.User)
     if user_name:
-        query = query.filter(models.User.username.ilike(f"%{user_name}%"))
+        query = query.filter(models.User.name.ilike(f"%{user_name}%"))
 
     return query.all()
-@router.put("/users/{user_id}/", response_model=schemas.UserResponse)
-def update_user(user_id:int, user: schemas.UserUpdate, db: Session = Depends(get_db)):
+@router.put("/users/{user_id}/", response_model=schemas.UserResponseDTO)
+def update_user(user_id:int, user: schemas.UserUpdateDTO, db: Session = Depends(get_db)):
     query_user = db.query(models.User).filter(models.User.id == user_id).first()
     if query_user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="User not found")

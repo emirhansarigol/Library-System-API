@@ -7,8 +7,8 @@ router = APIRouter(
     prefix="/books",
     tags=["books"],
 )
-@router.post("/books/", response_model=schemas.BookResponse)
-def create_book(book: schemas.BookCreate,db: Session = Depends(get_db)):
+@router.post("/books/", response_model=schemas.BookResponseDTO)
+def create_book(book: schemas.BookCreateDTO,db: Session = Depends(get_db)):
     new_book = models.Book(**book.dict())
     query_author = db.query(models.Author).filter(models.Author.id == book.author_id).first()
     query_category = db.query(models.Category).filter(models.Category.id == book.category_id).first()
@@ -22,7 +22,7 @@ def create_book(book: schemas.BookCreate,db: Session = Depends(get_db)):
     db.refresh(new_book)
     return new_book
 
-@router.get("/books/", response_model=list[schemas.BookResponse])
+@router.get("/books/", response_model=list[schemas.BookResponseDTO])
 def get_books(book_name:str=None,author:str=None,db: Session = Depends(get_db)):
     query=db.query(models.Book)
     if book_name:
@@ -31,13 +31,18 @@ def get_books(book_name:str=None,author:str=None,db: Session = Depends(get_db)):
         query = query.join(models.Author).filter(models.Author.name == author)
     return query.all()
 
-@router.put("/{book_id}", response_model=schemas.BookResponse)
-def update_book(book_id: int, book_update: schemas.BookUpdate, db: Session = Depends(get_db)):
+@router.put("/{book_id}", response_model=schemas.BookResponseDTO)
+def update_book(book_id: int, book_update: schemas.BookUpdateDTO, db: Session = Depends(get_db)):
     query_book=db.query(models.Book).filter(models.Book.id == book_id).first()
     if query_book is None:
         raise HTTPException(status_code=404, detail="kitap bulunamadı")
     if book_update.name:
         query_book.name = book_update.name
+    if book_update.category_id:
+        query_category = db.query(models.Category).filter(models.Category.id == book_update.category_id).first()
+        if query_category is None:
+            raise HTTPException(status_code=404,detail="böyle bir kategori yok, kategori eklemesi yapıp tekrar deneyiniz")
+        query_book.category_id = book_update.category_id
     if book_update.author_id:
         query_author = db.query(models.Author).filter(models.Author.id == book_update.author_id).first()
         if query_author is None:
